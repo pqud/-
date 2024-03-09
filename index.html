@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>신년계획 버킷리스트</title>
+  <style></style>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="bg-t5 center">
+  <h1 class="title"> SPARTHON Bucker List</h1>
+  <p class="msg">꿈은 꾸는 것이 아닌, 이루는 것이다</p>
+
+  <div>
+    <input type="text" id="inputText" placeholder="목표를 입력해보세요.">
+    <button id="addButton" onclick="addnewDiv()"></button>
+  </div>
+
+  <div class="flex-row wrap" id="Container">
+    <div class="bucket img1-t5 center" id="div1">
+      <button id="removeButton" onclick="removeDiv(div1)"></button>
+      나만의 웹 만들기
+    </div>
+    <div class="bucket img2-t5 center" id="div2">
+      <button id="removeButton" onclick="removeDiv(div2)"></button>
+      바디프로필 찍기
+    </div>
+
+  </div>
+
+  <script>
+
+
+    // 버킷 리스트 클릭 이벤트
+    const buckets = document.querySelectorAll(".bucket");
+    buckets.forEach((bucket, index) => {
+      bucket.addEventListener("click", function () {
+        // 클래스 토글
+        bucket.classList.toggle("done");
+
+        // 로컬 스토리지에 상태 저장
+        if (bucket.classList.contains("done")) {
+          localStorage.setItem("bucket" + index, "done");
+        } else {
+          localStorage.setItem("bucket" + index, "");
+        }
+      });
+    });
+
+    function addnewDiv() {
+      var inputText = document.getElementById("inputText").value;
+      var randomImageNumber = Math.floor(Math.random() * 6) + 1;
+      console.log("Random Image Number:", randomImageNumber);
+
+
+      var newDiv = document.createElement('div');
+      var divId = 'div' + (document.getElementById('Container').childElementCount + 1);
+      newDiv.id = divId;
+      newDiv.className = 'bucket img' + randomImageNumber + '-t5 center';
+
+
+      var removeButton = document.createElement('button');
+      removeButton.className = 'removeButton'; // 버튼에 클래스 추가
+      removeButton.textContent = 'x'; // 버튼 텍스트 추가
+
+
+      removeButton.onclick = function () {
+        removeDiv(newDiv); // 요소 자체를 전달
+      };
+      newDiv.appendChild(removeButton);
+
+
+      newDiv.innerHTML += inputText;
+
+
+      document.getElementById('Container').appendChild(newDiv);
+
+
+      // 입력 칸 비우기
+      document.getElementById('inputText').value = '';
+    }
+
+
+    function removeDiv(element) { // 요소 자체를 매개변수로 받음
+      element.parentNode.removeChild(element);
+    }
+    // 페이지 로드 시 이전 상태 복원
+    
+    document.addEventListener("DOMContentLoaded", (event) => {
+      const buckets = document.querySelectorAll(".bucket");
+      buckets.forEach((bucket, index) => {
+        // 로컬 스토리지에서 상태 읽기
+        const isDone = localStorage.getItem("bucket" + index) === "done";
+        if (isDone) {
+          bucket.classList.add("done");
+        }
+      });
+    });
+    
+
+
+  </script>
+</body>
+
+</html>
